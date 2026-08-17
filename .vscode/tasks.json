@@ -1,0 +1,84 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "cppbuild",
+            "label": "g++ build active file",
+            "command": "/usr/bin/g++",
+            "args": [
+                "-D_DEBUG",
+                "-ggdb3",
+                "-std=c++17",
+
+                "-Wall",
+                "-Wextra",
+                "-Waggressive-loop-optimizations",
+                "-Wc++14-compat",
+                "-Wmissing-declarations",
+                "-Wcast-align",
+                "-Wcast-qual",
+                "-Wchar-subscripts",
+                "-Wconditionally-supported",
+                "-Wconversion",
+                "-Wctor-dtor-privacy",
+                "-Wempty-body",
+                "-Wfloat-equal",
+                "-Wformat-nonliteral",
+                "-Wformat-security",
+                "-Wformat-signedness",
+                "-Wformat=2",
+                "-Winline",
+                "-Wlogical-op",
+                "-Wnon-virtual-dtor",
+                "-Woverloaded-virtual",
+                "-Wpointer-arith",
+                "-Winit-self",
+                "-Wredundant-decls",
+                "-Wshadow",
+                "-Wsign-conversion",
+                "-Wstrict-null-sentinel",
+                "-Wstrict-overflow=2",
+                "-Wsuggest-attribute=noreturn",
+                "-Wsuggest-final-methods",
+                "-Wsuggest-final-types",
+                "-Wswitch-default",
+                "-Wswitch-enum",
+                "-Wundef",
+                "-Wunreachable-code",
+                "-Wunused",
+                "-Wuseless-cast",
+                "-Wvariadic-macros",
+
+                "-Wno-literal-suffix",
+                "-Wno-missing-field-initializers",
+                "-Wno-narrowing",
+                "-Wno-old-style-cast",
+                "-Wno-varargs",
+
+                "-Wstack-protector",
+                "-fcheck-new",
+                "-fsized-deallocation",
+                "-fstack-protector",
+                "-fstrict-overflow",
+                "-fno-omit-frame-pointer",
+                "-fPIE",
+
+                "-Werror=maybe-uninitialized",
+
+                "${file}",
+                "-o",
+                "${fileDirname}/${fileBasenameNoExtension}"
+            ],
+            "options": {
+                "cwd": "${fileDirname}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+    ]
+}

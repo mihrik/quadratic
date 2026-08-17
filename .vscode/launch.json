@@ -1,0 +1,15 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "C++: Run active file",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${fileDirname}/${fileBasenameNoExtension}",
+            "cwd": "${fileDirname}",
+            "stopAtEntry": false,
+            "MIMode": "gdb",
+            "preLaunchTask": "g++ build active file"
+        }
+    ]
+}
