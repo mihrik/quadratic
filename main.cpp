@@ -22,7 +22,7 @@ int main(void)
     while (scanf("%lf %lf %lf", &eq1.a, &eq1.b, &eq1.c) == 3)
     {
         double d = eval_d(eq1);
-        if (eq1.a < EPS) {
+        if (ABS(eq1.a) < EPS) {
             puts("Не является квадратным уравнением");
         }
         else if (d < -EPS)
