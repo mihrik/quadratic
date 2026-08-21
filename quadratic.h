@@ -12,7 +12,13 @@
     #define PRINT_BLUE(...) printf(__VA_ARGS__)
     #define PRINT_GREEN(...) printf(__VA_ARGS__)
 #endif
-#define to_int(x) !(x)
+#define my_assert(x) \
+    if (!(x)) \
+    { \
+        fprintf(stderr, "Не проходит проверку. Ошибка в %s:%d\n", __FILE__, __LINE__); \
+        exit(EXIT_FAILURE); \
+    }
+
 const double EPS = 1e-9;
 const int INPUT_BUFFER_SIZE = 50;
 
@@ -46,7 +52,6 @@ int root_count_and_solution(quadratic *object);
 void quadratic_solution(void);
 void get_num(double *pt);
 int get_option(void);
-void my_assert(int mode, int n, const char* file_name);
 int isinf_or_isnan(double num);
 int is_zero(double num);
 void coeffs_initialization(quadratic * ptr);

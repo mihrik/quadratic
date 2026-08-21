@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
-#include <assert.h>
 #include <stdbool.h>
 
 /**
@@ -30,10 +29,10 @@ double eval_discriminant(quadratic eq)
 
 int root_count_and_solution(quadratic *object)
 {
-    my_assert(to_int(object), __LINE__, __FILE__);
-    my_assert(isinf_or_isnan(object->a), __LINE__, __FILE__);
-    my_assert(isinf_or_isnan(object->b), __LINE__, __FILE__);
-    my_assert(isinf_or_isnan(object->c), __LINE__, __FILE__);
+    my_assert(object);
+    my_assert(isinf_or_isnan(object->a));
+    my_assert(isinf_or_isnan(object->b));
+    my_assert(isinf_or_isnan(object->c));
 
     if (is_zero(object->a))
     {
@@ -110,21 +109,21 @@ void quadratic_solution(void)
 
         switch(equation.number_of_roots)
         {
-            case IMAGINARY: PRINT_BLUE("Уравнение не имеет действительных решений\n");
+            case IMAGINARY: PRINT_COLOR(BLUE, "Уравнение не имеет действительных решений\n");
                      break;
-            case NO_SOLUTIONS: PRINT_BLUE("Уравнение не имеет никаких решений\n");
+            case NO_SOLUTIONS: PRINT_COLOR(BLUE, "Уравнение не имеет никаких решений\n");
                     break;
-            case ONE_SOLUTION: PRINT_BLUE("Уравнение %gx^2%+gx%+g имеет единственный"
+            case ONE_SOLUTION: PRINT_COLOR(BLUE, "Уравнение %gx^2%+gx%+g имеет единственный"
                             " корень x = %g\n", equation.a, equation.b, equation.c,
                               equation.x1);
                     break;
-            case TWO_SOLUTIONS: PRINT_BLUE("Уравнение %gx^2%+gx%+g имеет два"
+            case TWO_SOLUTIONS: PRINT_COLOR(BLUE, "Уравнение %gx^2%+gx%+g имеет два"
                             " корня x = %g и x = %g\n", equation.a,
                              equation.b, equation.c, equation.x1, equation.x2);
                     break;
-            case INFINITY_SOLUTIONS: PRINT_BLUE("Бесконечное количество решений\n");
+            case INFINITY_SOLUTIONS: PRINT_COLOR(BLUE, "Бесконечное количество решений\n");
                     break;
-            default: PRINT_RED("Ошибка\n");
+            default: PRINT_COLOR(EXTRA_RED, "Ошибка\n");
                     return;
         }
 
@@ -182,7 +181,7 @@ void get_num(double *pt)
         if (*end != '\n')
         {
             buffer[i-1] = '\0';
-            PRINT_RED("%s не является числовым вводом\n", buffer);
+            PRINT_COLOR(RED, "%s не является числовым вводом\n", buffer);
             continue;
         }
 
@@ -203,36 +202,17 @@ void get_num(double *pt)
 // todo: fix warning
 int get_option(void)
 {
-    PRINT_RED("Введите y, чтобы продолжить. n - в противном случае\n");
+    PRINT_COLOR(ORANGE, "Введите y, чтобы продолжить. n - в противном случае\n");
     int ch1 = getchar();
     while (ch1 != 'y' && ch1 != 'n')
     {
-        PRINT_RED("Недопустимый ввод, введите y или n\n");
+        PRINT_COLOR(RED, "Недопустимый ввод, введите y или n\n");
         clear_buffer();
 
         ch1 = getchar();
     }
 
     return ch1;
-}
-
-/**
- @brief              прерывает работу программы если в аргументе 0
-
- @param [in]   mode  0 или 1 в зависимости от переданного условия
- @param [in]   n     номер строки на которой произошла ошибка проверки
- @return             ничего
-
- @note               также выводит название файла в котором произошла ошибка
- */
-
-void my_assert(int mode, int n, const char* file_name)
-{
-    if (mode == on)
-    {
-        fprintf(stderr, "Не проходит проверку. Ошибка в %s:%d\n", file_name, n);
-        exit(EXIT_FAILURE);
-    }
 }
 
 /**
@@ -274,15 +254,15 @@ int is_zero(double num)
 
 void coeffs_initialization(quadratic * ptr)
 {
-            PRINT_GREEN("Введите a\n");
+        PRINT_COLOR(GREEN, "Введите a\n");
         printf(">:");
         get_num(&ptr->a);
 
-        PRINT_GREEN("Введите b\n");
+        PRINT_COLOR(GREEN, "Введите b\n");
         printf(">:");
         get_num(&ptr->b);
 
-        PRINT_GREEN(GREEN"Введите c\n");
+        PRINT_COLOR(GREEN, "Введите c\n");
         printf(">:");
         get_num(&ptr->c);
 }
