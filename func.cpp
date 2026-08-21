@@ -28,51 +28,62 @@ double eval_discriminant(quadratic eq)
  @note                   прерывает программу в случае неверной передачи object
  */
 
-int root_count(quadratic *object)
+int root_count_and_solution(quadratic *object)
 {
-    assert(object != NULL);
-    assert(isfinite((object->a)));
-    assert(isfinite(object->b));
-    assert(isfinite(object->c));
+    my_assert(to_int(object), __LINE__, __FILE__);
+    my_assert(isinf_or_isnan(object->a), __LINE__, __FILE__);
+    my_assert(isinf_or_isnan(object->b), __LINE__, __FILE__);
+    my_assert(isinf_or_isnan(object->c), __LINE__, __FILE__);
 
-    if (fabs(object->a) < EPS)
+    if (is_zero(object->a))
     {
-        if (fabs(object->b) < EPS)
+        if (is_zero(object->b))
         {
-            if (fabs(object->c) < EPS)
+            if (is_zero(object->c))
             {
-                return 3;
+                return INFINITY_SOLUTIONS;
             }
             else
             {
-                return 0;
+                return NO_SOLUTIONS;
             }
+        }
+        else if (is_zero(object->c))
+        {
+            object->x1 = 0;
+            return ONE_SOLUTION;
         }
         else
         {
             object->x1 = -object->c / object->b;
-            return 1;
+            return ONE_SOLUTION;
         }
     }
+    else if (is_zero(object->b) && is_zero(object->c))
+    {
+        object->x1 = 0;
+        return ONE_SOLUTION;
+    }
+
 
     double d = eval_discriminant(*object);
 
     if (d < 0)
     {
-        return -1;
+        return IMAGINARY;
     }
 
-    else if (fabs(d) < EPS)
+    else if (is_zero(d))
     {
         object->x1 = -object->b / (2 * object->a);
-        return 1;
+        return ONE_SOLUTION;
     }
 
     else
     {
         object->x1 = (-object->b + sqrt(d)) / (2 * object->a);
         object->x2 = (-object->b - sqrt(d)) / (2 * object->a);
-        return 2;
+        return TWO_SOLUTIONS;
     }
 }
 
@@ -88,48 +99,38 @@ int root_count(quadratic *object)
 
 void quadratic_solution(void)
 {
-    quadratic equation = {0, 0, 0, 0, 0};
-    char ch = '\0';
+    quadratic equation = {0, 0, 0, 0, 0, 0};
+    int option = '\0';
 
     do
     {
-        puts("Введите a");
-        printf(">:");
-        get_num(&equation.a);
+        coeffs_initialization(&equation);
 
-        puts("Введите b");
-        printf(">:");
-        get_num(&equation.b);
+        equation.number_of_roots = root_count_and_solution(&equation);
 
-        puts("Введите c");
-        printf(">:");
-        get_num(&equation.c);
-
-        int roots = root_count(&equation);
-
-        switch(roots)
+        switch(equation.number_of_roots)
         {
-            case IMAGINARY: puts("Уравнение не имеет действительных решений");
+            case IMAGINARY: PRINT_BLUE("Уравнение не имеет действительных решений\n");
                      break;
-            case NO_SOLUTIONS: puts("Уравнение не имеет никаких решений");
+            case NO_SOLUTIONS: PRINT_BLUE("Уравнение не имеет никаких решений\n");
                     break;
-            case ONE_SOLUTION: printf("Уравнение %gx^2%+gx%+g имеет единственный"
+            case ONE_SOLUTION: PRINT_BLUE("Уравнение %gx^2%+gx%+g имеет единственный"
                             " корень x = %g\n", equation.a, equation.b, equation.c,
-                             equation.x1);
+                              equation.x1);
                     break;
-            case TWO_SOLUTIONS: printf("Уравнение %gx^2%+gx%+g имеет два"
+            case TWO_SOLUTIONS: PRINT_BLUE("Уравнение %gx^2%+gx%+g имеет два"
                             " корня x = %g и x = %g\n", equation.a,
                              equation.b, equation.c, equation.x1, equation.x2);
                     break;
-            case INFINITY_SOLUTIONS: puts("Бесконечное количество решений");
+            case INFINITY_SOLUTIONS: PRINT_BLUE("Бесконечное количество решений\n");
                     break;
-            default: puts("Ошибка");
-                     exit(EXIT_FAILURE);
+            default: PRINT_RED("Ошибка\n");
+                    return;
         }
 
-        ch = get_char();
-        while (getchar() != '\n');
-    } while (ch != 'n');
+        option = get_option();
+        while (getchar() != '\n'); //function
+    } while (option != 'n');
 }
 
 /**
@@ -144,16 +145,18 @@ void quadratic_solution(void)
 void get_num(double *pt)
 {
     double num = 0;
-    bool marker = false;
+    bool coeffs_read_success = false;
 
-    while (!marker)
+    while (!coeffs_read_success)
     {
         char buffer[INPUT_BUFFER_SIZE] = {};
         char *end = buffer;
-        char ch = '\0';
+        int ch = '\0';
         int i = 0;
+        char mem = '\0';
+        bool is_spaces = false;
 
-        for ( ; i < INPUT_BUFFER_SIZE - 1 && ch != '\n'; i++)
+        for ( ; i < INPUT_BUFFER_SIZE - 1 && ch != '\n' && ch != EOF; i++)
         {
             ch = getchar();
             buffer[i] = ch;
@@ -161,17 +164,29 @@ void get_num(double *pt)
 
         if (ch != '\n')
         {
-            while (getchar() != '\n');
+            clear_buffer(); // todo: move to new function CheckClearBuf
         }
+
         num = strtod(buffer, &end);
+        mem = buffer[i-1];
+        buffer[i-1] = '\0';
+        is_spaces = check_clear_buf(end);
+
+        if (is_spaces)
+        {
+            coeffs_read_success = true;
+            continue;
+        }
+        buffer[i-1] = mem;
+
         if (*end != '\n')
         {
             buffer[i-1] = '\0';
-            printf("%s не является целочисленным вводом\n", buffer);
+            PRINT_RED("%s не является числовым вводом\n", buffer);
             continue;
         }
 
-        marker = true;
+        coeffs_read_success = true;
     }
 
     *pt = num;
@@ -185,20 +200,123 @@ void get_num(double *pt)
 
  @note              при недопустимом вводе дает возможность повторного ввода
  */
-
-char get_char(void)
+// todo: fix warning
+int get_option(void)
 {
-    char ch1;
-
-    puts("Введите y, чтобы продолжить. n - в противном случае");
-    ch1 = getchar();
+    PRINT_RED("Введите y, чтобы продолжить. n - в противном случае\n");
+    int ch1 = getchar();
     while (ch1 != 'y' && ch1 != 'n')
     {
-        puts("Недопустимый ввод, введите y или n");
-        while (getchar() != '\n');
+        PRINT_RED("Недопустимый ввод, введите y или n\n");
+        clear_buffer();
 
         ch1 = getchar();
     }
 
     return ch1;
 }
+
+/**
+ @brief              прерывает работу программы если в аргументе 0
+
+ @param [in]   mode  0 или 1 в зависимости от переданного условия
+ @param [in]   n     номер строки на которой произошла ошибка проверки
+ @return             ничего
+
+ @note               также выводит название файла в котором произошла ошибка
+ */
+
+void my_assert(int mode, int n, const char* file_name)
+{
+    if (mode == on)
+    {
+        fprintf(stderr, "Не проходит проверку. Ошибка в %s:%d\n", file_name, n);
+        exit(EXIT_FAILURE);
+    }
+}
+
+/**
+ @brief             проверяет является ли число NaN или inf
+
+ @param [in]  num   число для проверки
+ @return            0 - является, 1 - нет
+ */
+
+int isinf_or_isnan(double num)
+{
+    if (isinf(num))
+    {
+        return 0;
+    }
+    return !(num != num);
+}
+
+/**
+ @brief              проверяет число double на равенство нулю
+
+ @param [in]   num   число для проверки
+ @return             0 - не равно нулю, 1 - равно нулю
+ */
+
+int is_zero(double num)
+{
+    return fabs(num) < EPS;
+}
+
+/**
+ @brief              инициализирует коэффициенты квадратного уравнения
+
+ @param [out]  ptr   указатель на структуру которая требует инициализации
+ @return             ничего
+
+ @note               имеет оформленный ввод
+ */
+
+void coeffs_initialization(quadratic * ptr)
+{
+            PRINT_GREEN("Введите a\n");
+        printf(">:");
+        get_num(&ptr->a);
+
+        PRINT_GREEN("Введите b\n");
+        printf(">:");
+        get_num(&ptr->b);
+
+        PRINT_GREEN(GREEN"Введите c\n");
+        printf(">:");
+        get_num(&ptr->c);
+}
+
+/**
+ @brief              очищает буффер от всех символов до '\n'
+
+ @param              нет
+ */
+
+void clear_buffer(void)
+{
+    while (getchar() != '\n');
+}
+
+/**
+ @brief                 проверяет является ли строка пробелами
+
+ @param [out]  buffer   указатель на строку которая требует проверки
+ @return                1 - является пробелами, 0 - не является
+ */
+
+int check_clear_buf(char *buffer)
+{
+    bool all_space = true;
+    while (*buffer && *buffer != '\n')
+    {
+        if (*buffer != ' ')
+        {
+            all_space = false;
+            break;
+        }
+        buffer++;
+    }
+    return all_space;
+}
+// todo enter problem

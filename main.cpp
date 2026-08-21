@@ -1,17 +1,16 @@
+#include "quadratic.h"
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
-#include <assert.h>
-#include "quadratic.h"
 #include <stdbool.h>
 
 int main(void)
 {
-    puts("Эта программа решает квадратное уравнение в действительных "
-    "решениях");
-    puts("Квадратное уравнение имеет вид ax^2 + bx + c");
+    PRINT_EXTRA_GREEN("Эта программа решает квадратное уравнение в действительных "
+    "решениях\n");
+    PRINT_GREEN("Квадратное уравнение имеет вид ax^2 + bx + c\n");
     quadratic_solution();
 
-    puts("Завершение программы");
+    PRINT_GREEN("Завершение программы\n");
     return 0;
 }
