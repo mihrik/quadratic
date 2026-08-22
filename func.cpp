@@ -161,9 +161,15 @@ void get_num(double *pt)
             buffer[i] = ch;
         }
 
+        if (buffer[0] == '\n')
+        {
+            PRINT_COLOR(RED, "недопустимый формат ввода\n");
+            continue;
+        }
+
         if (ch != '\n')
         {
-            clear_buffer(); // todo: move to new function CheckClearBuf
+            clear_buffer();
         }
 
         num = strtod(buffer, &end);
@@ -199,7 +205,6 @@ void get_num(double *pt)
 
  @note              при недопустимом вводе дает возможность повторного ввода
  */
-// todo: fix warning
 int get_option(void)
 {
     PRINT_COLOR(ORANGE, "Введите y, чтобы продолжить. n - в противном случае\n");
@@ -228,7 +233,7 @@ int isinf_or_isnan(double num)
     {
         return 0;
     }
-    return !(num != num);
+    return is_zero(num-num);
 }
 
 /**
@@ -299,4 +304,3 @@ int check_clear_buf(char *buffer)
     }
     return all_space;
 }
-// todo enter problem
