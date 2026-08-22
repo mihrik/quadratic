@@ -30,9 +30,9 @@ double eval_discriminant(quadratic eq)
 int root_count_and_solution(quadratic *object)
 {
     my_assert(object);
-    my_assert(isinf_or_isnan(object->a));
-    my_assert(isinf_or_isnan(object->b));
-    my_assert(isinf_or_isnan(object->c));
+    my_assert(!isinf_or_isnan(object->a));
+    my_assert(!isinf_or_isnan(object->b));
+    my_assert(!isinf_or_isnan(object->c));
 
     if (is_zero(object->a))
     {
@@ -109,22 +109,22 @@ void quadratic_solution(void)
 
         switch(equation.number_of_roots)
         {
-            case IMAGINARY: PRINT_COLOR(BLUE, "Уравнение не имеет действительных решений\n");
-                     break;
-            case NO_SOLUTIONS: PRINT_COLOR(BLUE, "Уравнение не имеет никаких решений\n");
-                    break;
-            case ONE_SOLUTION: PRINT_COLOR(BLUE, "Уравнение %gx^2%+gx%+g имеет единственный"
+            case          IMAGINARY: PRINT_COLOR(BLUE, "Уравнение не имеет действительных решений\n");
+                            break;
+            case       NO_SOLUTIONS: PRINT_COLOR(BLUE, "Уравнение не имеет никаких решений\n");
+                            break;
+            case       ONE_SOLUTION: PRINT_COLOR(BLUE, "Уравнение %gx^2%+gx%+g имеет единственный"
                             " корень x = %g\n", equation.a, equation.b, equation.c,
                               equation.x1);
-                    break;
-            case TWO_SOLUTIONS: PRINT_COLOR(BLUE, "Уравнение %gx^2%+gx%+g имеет два"
+                            break;
+            case      TWO_SOLUTIONS: PRINT_COLOR(BLUE, "Уравнение %gx^2%+gx%+g имеет два"
                             " корня x = %g и x = %g\n", equation.a,
                              equation.b, equation.c, equation.x1, equation.x2);
-                    break;
+                            break;
             case INFINITY_SOLUTIONS: PRINT_COLOR(BLUE, "Бесконечное количество решений\n");
-                    break;
-            default: PRINT_COLOR(EXTRA_RED, "Ошибка\n");
-                    return;
+                            break;
+            default                : PRINT_COLOR(EXTRA_RED, "Ошибка\n");
+                           return;
         }
 
         option = get_option();
@@ -143,6 +143,8 @@ void quadratic_solution(void)
 
 void get_num(double *pt)
 {
+    my_assert(pt);
+
     double num = 0;
     bool coeffs_read_success = false;
 
@@ -224,16 +226,16 @@ int get_option(void)
  @brief             проверяет является ли число NaN или inf
 
  @param [in]  num   число для проверки
- @return            0 - является, 1 - нет
+ @return            1 - является, 0 - нет
  */
 
 int isinf_or_isnan(double num)
 {
     if (isinf(num))
     {
-        return 0;
+        return 1;
     }
-    return is_zero(num-num);
+    return !is_zero(num-num);
 }
 
 /**
@@ -259,21 +261,23 @@ int is_zero(double num)
 
 void coeffs_initialization(quadratic * ptr)
 {
-        PRINT_COLOR(GREEN, "Введите a\n");
-        printf(">:");
-        get_num(&ptr->a);
+    my_assert(ptr);
 
-        PRINT_COLOR(GREEN, "Введите b\n");
-        printf(">:");
-        get_num(&ptr->b);
+    PRINT_COLOR(GREEN, "Введите a\n");
+    printf(">:");
+    get_num(&ptr->a);
 
-        PRINT_COLOR(GREEN, "Введите c\n");
-        printf(">:");
-        get_num(&ptr->c);
+    PRINT_COLOR(GREEN, "Введите b\n");
+    printf(">:");
+    get_num(&ptr->b);
+
+    PRINT_COLOR(GREEN, "Введите c\n");
+    printf(">:");
+    get_num(&ptr->c);
 }
 
 /**
- @brief              очищает буффер от всех символов до '\n'
+ @brief              очищает буфер от всех символов до '\n'
 
  @param              нет
  */
@@ -292,6 +296,8 @@ void clear_buffer(void)
 
 int check_clear_buf(char *buffer)
 {
+    my_assert(buffer);
+
     bool all_space = true;
     while (*buffer && *buffer != '\n')
     {
@@ -303,4 +309,71 @@ int check_clear_buf(char *buffer)
         buffer++;
     }
     return all_space;
+}
+
+/**
+ @brief              проверяет равны ли корни уравнения
+
+ @param [in]  x1     первое число
+ @param [in]  x2     второе число
+ @return             1 - равны, 0 - неравны
+
+ @note               при получении обоих значений NAN выводит 1
+ */
+
+int meanings_are_equal(double x1, double x2)
+{
+    if (!isinf_or_isnan(x1) && !isinf_or_isnan(x2))
+    {
+        return is_zero(x1 - x2);
+    }
+    else if (isnan(x1) && isnan(x2))
+    {
+        return 1;
+    }
+    return 0;
+}
+
+/**
+ @brief              сортирует два числа в порядке неубывания
+
+ @param [out]  x1    указатель на первое число
+ @param [out]  x2    указатель на второе число
+ @return             ничего
+
+ @note               если среди чисел есть NAN то сначала число потом NAN
+ */
+
+void sort_roots(double *x1, double *x2)
+{
+    my_assert(x1);
+    my_assert(x2);
+
+    if (!isnan(*x1) && !isnan(*x2))
+    {
+        double temp = *x2;
+        if (*x1 > *x2)
+        {
+            *x2 = *x1;
+            *x1 = temp;
+        }
+    }
+    if (isnan(*x1) && !isnan(*x2))
+    {
+        *x1 = *x2;
+        *x2 = NAN;
+    }
+}
+
+/**
+ @brief              запускает тесты quadratic_solution и get_num
+
+ @param              нет
+ @return             ничего
+ */
+
+void big_test(void)
+{
+    test_quadratic();
+    test_get_num();
 }

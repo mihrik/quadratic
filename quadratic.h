@@ -1,4 +1,5 @@
 #define COLOR
+#include <stdio.h>
 #ifdef COLOR
     #include "colors.h"
 #else
@@ -20,7 +21,8 @@
     }
 
 const double EPS = 1e-9;
-const int INPUT_BUFFER_SIZE = 50;
+const int INPUT_BUFFER_SIZE = 100;
+const int MAX_PHRASE_SIZE = 200;
 
 typedef struct quadratic
 {
@@ -57,3 +59,16 @@ int is_zero(double num);
 void coeffs_initialization(quadratic * ptr);
 void clear_buffer(void);
 int check_clear_buf(char *buffer);
+int run_one_test(quadratic ref, int test_num);
+int meanings_are_equal(double x1, double x2);
+void sort_roots(double *x1, double *x2);
+int run_tests(void);
+int one_get_num_test(char *line, int test_num);
+double get_num_test(const char *pt);
+int run_get_num_tests(void);
+void test_quadratic(void);
+void test_get_num(void);
+void big_test(void);
+int run_get_num_test(int not_error, int test_num, FILE *fp_strings, FILE *fp_data);
+// todo переключать цвет, test командной строкой argv... ascii.art
+// todo скрипты .sh .bush

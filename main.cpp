@@ -6,6 +6,8 @@
 
 int main(void)
 {
+    big_test();
+
     PRINT_COLOR(EXTRA_GREEN, "Эта программа решает квадратное уравнение в действительных "
     "решениях\n");
     PRINT_COLOR(GREEN, "Квадратное уравнение имеет вид ax^2 + bx + c\n");
