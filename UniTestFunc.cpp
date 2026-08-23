@@ -100,6 +100,8 @@ int run_tests(void)
                         break;
             case INFINITY_SOLUTIONS: quadratic_equation.x1 = NAN;
                                      quadratic_equation.x2 = NAN;
+            default                :
+                        break;
         }
         sum_of_fails += run_one_test(&quadratic_equation, test);
     }

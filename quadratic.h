@@ -23,6 +23,7 @@
 const double EPS = 1e-9;
 const int INPUT_BUFFER_SIZE = 100;
 const int MAX_PHRASE_SIZE = 200;
+static const char *ASCII_ARTS[] = {"arts/shrek", "arts/mole", "arts/some_bird", "arts/squid", "arts/sponge_bob", "arts/teddy", "arts/old_car", "arts/vamp"};
 
 typedef struct quadratic
 {
@@ -49,26 +50,36 @@ enum modes
     on = 1
 };
 
+enum arg_values
+{
+    ONE_VALUE = 1,
+    TWO_VALUES,
+    THREE_VALUES
+};
+
 double eval_discriminant(quadratic eq);
 int root_count_and_solution(quadratic *object);
 void quadratic_solution(void);
-void get_num(double *pt);
+double get_num(double *pt, int mode, const char *for_compare);
 int get_option(void);
 int isinf_or_isnan(double num);
 int is_zero(double num);
 void coeffs_initialization(quadratic * ptr);
 void clear_buffer(void);
 int check_clear_buf(char *buffer);
-int run_one_test(quadratic ref, int test_num);
+int run_one_test(quadratic *ref, int test_num);
 int meanings_are_equal(double x1, double x2);
 void sort_roots(double *x1, double *x2);
 int run_tests(void);
 int one_get_num_test(char *line, int test_num);
-double get_num_test(const char *pt);
 int run_get_num_tests(void);
 void test_quadratic(void);
 void test_get_num(void);
 void big_test(void);
 int run_get_num_test(int not_error, int test_num, FILE *fp_strings, FILE *fp_data);
-// todo переключать цвет, test командной строкой argv... ascii.art
+void print_ascii(FILE *art_addres);
+void print_rand_ascii(void);
+void print_greeting(void);
+void nice_output(char symbol);
+
 // todo скрипты .sh .bush

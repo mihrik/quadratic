@@ -2,15 +2,45 @@
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
+#include <string.h>
 #include <stdbool.h>
+#include <time.h>
 
-int main(void)
+
+int main(int argc, char *argv[])
 {
-    big_test();
+    print_rand_ascii();
+    puts("\n\n");
+    print_greeting();
 
-    PRINT_COLOR(EXTRA_GREEN, "Эта программа решает квадратное уравнение в действительных "
-    "решениях\n");
-    PRINT_COLOR(GREEN, "Квадратное уравнение имеет вид ax^2 + bx + c\n");
+    char primary_str[] = "";
+    char *color_mode = primary_str;
+    char *test_mode = primary_str;
+
+    switch(argc)
+    {
+        case ONE_VALUE   :
+            break;
+        case TWO_VALUES  : color_mode = argv[1];
+            break;
+        case THREE_VALUES: color_mode = argv[1];
+                           test_mode = argv[2];
+            break;
+        default          : puts("Превышено максимальное количество аргументов командной строки"
+                            ". Их максимальное количество = 3");
+            break;
+    }
+
+    if (strcmp(test_mode, "on") == 0)
+    {
+        big_test();
+    }
+
+    if (strcmp(color_mode, "-c") == 0)
+    {
+        ;
+    }
+
     quadratic_solution();
 
     PRINT_COLOR(GREEN, "Завершение программы\n");

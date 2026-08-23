@@ -3,6 +3,8 @@
 #include <math.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <time.h>
+
 
 /**
  @brief             вычисляет дискриминант
@@ -114,8 +116,7 @@ void quadratic_solution(void)
             case       NO_SOLUTIONS: PRINT_COLOR(BLUE, "Уравнение не имеет никаких решений\n");
                             break;
             case       ONE_SOLUTION: PRINT_COLOR(BLUE, "Уравнение %gx^2%+gx%+g имеет единственный"
-                            " корень x = %g\n", equation.a, equation.b, equation.c,
-                              equation.x1);
+                            " корень\n", equation.a, equation.b, equation.c);
                             break;
             case      TWO_SOLUTIONS: PRINT_COLOR(BLUE, "Уравнение %gx^2%+gx%+g имеет два"
                             " корня x = %g и x = %g\n", equation.a,
@@ -135,15 +136,24 @@ void quadratic_solution(void)
 /**
  @brief             получает число с клавиатуры
 
- @param [out]  pt   указатель на переменную которой присвоен ввод
- @return            ничего
+ @param [out]  pt            указатель на переменную которой присвоен ввод, в режиме 1 = NULL
+ @param [out]  for_compare   строка для анализа в режиме 1, NULL в режиме 0
+ @param [in]   mode          режим работы функции: 0 - в обычном режиме, 1 - в режиме теста
+ @return                     ничего в режиме 0, в режиме 1 - вернет полученное число при корректном вводе, 0 при некорректном
 
- @note              при недопустимом вводе дает возможность повторного ввода
+ @note              при недопустимом вводе дает возможность повторного ввода, а в режиме теста нет
  */
 
-void get_num(double *pt)
+double get_num(double *pt, int mode, const char *for_compare)
 {
-    my_assert(pt);
+    if (mode == 1)
+    {
+        my_assert(for_compare);
+    }
+    else
+    {
+        my_assert(pt);
+    }
 
     double num = 0;
     bool coeffs_read_success = false;
@@ -159,17 +169,28 @@ void get_num(double *pt)
 
         for ( ; i < INPUT_BUFFER_SIZE - 1 && ch != '\n' && ch != EOF; i++)
         {
-            ch = getchar();
-            buffer[i] = ch;
+            if (mode == 0)
+            {
+                ch = getchar();
+                buffer[i] = ch;
+            }
+            else
+            {
+                ch = *(for_compare+i);
+                buffer[i] = ch;
+            }
         }
 
         if (buffer[0] == '\n')
         {
+            if (mode == 1)
+            {
+                return 0;
+            }
             PRINT_COLOR(RED, "недопустимый формат ввода\n");
             continue;
         }
-
-        if (ch != '\n')
+        if (mode == 0 && ch != '\n' && ch != EOF)
         {
             clear_buffer();
         }
@@ -181,22 +202,35 @@ void get_num(double *pt)
 
         if (is_spaces)
         {
-            coeffs_read_success = true;
-            continue;
+            if (mode == 0)
+            {
+                coeffs_read_success = true;
+                continue;
+            }
+            return num;
         }
         buffer[i-1] = mem;
 
         if (*end != '\n')
         {
+            if (mode == 1)
+            {
+                return 0;
+            }
             buffer[i-1] = '\0';
             PRINT_COLOR(RED, "%s не является числовым вводом\n", buffer);
             continue;
         }
-
+        if (mode == 1)
+        {
+            return num;
+        }
         coeffs_read_success = true;
     }
 
+
     *pt = num;
+    return 1;
 }
 
 /**
@@ -265,15 +299,15 @@ void coeffs_initialization(quadratic * ptr)
 
     PRINT_COLOR(GREEN, "Введите a\n");
     printf(">:");
-    get_num(&ptr->a);
+    get_num(&ptr->a, 0, NULL);
 
     PRINT_COLOR(GREEN, "Введите b\n");
     printf(">:");
-    get_num(&ptr->b);
+    get_num(&ptr->b, 0, NULL);
 
     PRINT_COLOR(GREEN, "Введите c\n");
     printf(">:");
-    get_num(&ptr->c);
+    get_num(&ptr->c, 0, NULL);
 }
 
 /**
@@ -376,4 +410,108 @@ void big_test(void)
 {
     test_quadratic();
     test_get_num();
+}
+
+/**
+ @brief                      выводит классную картинку
+
+ @param [out]   art_addres   адрес файла с картинкой
+ @return                     ничего
+ */
+
+void print_ascii(FILE *art_addres)
+{
+    char one_line[300];
+    while(fgets(one_line, 300, art_addres))
+    {
+        fputs(one_line, stdout);
+    }
+}
+
+/**
+ @brief              печатает рандомную крутую картинку
+
+ @param              нет
+ @return             ничего
+ */
+
+void print_rand_ascii(void)
+{
+    srand((unsigned int) time(0));
+
+    FILE *fp_art = NULL;
+    my_assert(fp_art = fopen(ASCII_ARTS[rand() % (sizeof (ASCII_ARTS) / sizeof(ASCII_ARTS[0]))], "r"));
+    print_ascii(fp_art);
+    my_assert(!fclose(fp_art));
+}
+
+/**
+ @brief              печатает афигенное приветствие
+
+ @param              нет
+ @return             ничего
+ */
+
+void print_greeting(void)
+{
+    FILE *fp_art = NULL;
+    my_assert(fp_art = fopen("arts/greeting", "r"));
+    print_ascii(fp_art);
+    my_assert(!fclose(fp_art));
+}
+
+
+
+void nice_output(char symbol)
+{
+    FILE *fp = NULL;
+
+    switch(symbol)
+    {
+        case 'x':   my_assert(fp = fopen("symbols/x", "r"));
+                    print_ascii(fp);
+            break;
+        case '-':   my_assert(fp = fopen("symbols/minus", "r"));
+                    print_ascii(fp);
+            break;
+        case '.':   my_assert(fp = fopen("symbols/dot", "r"));
+                    print_ascii(fp);
+            break;
+        case '9':   my_assert(fp = fopen("symbols/9", "r"));
+                    print_ascii(fp);
+            break;
+        case '8':   my_assert(fp = fopen("symbols/8", "r"));
+                    print_ascii(fp);
+            break;
+        case '7':   my_assert(fp = fopen("symbols/7", "r"));
+                    print_ascii(fp);
+            break;
+        case '6':   my_assert(fp = fopen("symbols/6", "r"));
+                    print_ascii(fp);
+            break;
+        case '5':   my_assert(fp = fopen("symbols/5", "r"));
+                    print_ascii(fp);
+            break;
+        case '4':   my_assert(fp = fopen("symbols/4", "r"));
+                    print_ascii(fp);
+            break;
+        case '3':   my_assert(fp = fopen("symbols/3", "r"));
+                    print_ascii(fp);
+            break;
+        case '2':   my_assert(fp = fopen("symbols/2", "r"));
+                    print_ascii(fp);
+            break;
+        case '1':   my_assert(fp = fopen("symbols/1", "r"));
+                    print_ascii(fp);
+            break;
+        case '0':   my_assert(fp = fopen("symbols/0", "r"));
+                    print_ascii(fp);
+            break;
+        case '=':   my_assert(fp = fopen("symbols/equal", "r"));
+                    print_ascii(fp);
+            break;
+        default :   my_assert(0);
+    }
+
+    my_assert(!fclose(fp));
 }
