@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <time.h>
+#include <string.h>
 
 
 /**
@@ -102,6 +103,7 @@ void quadratic_solution(void)
 {
     quadratic equation = {0, 0, 0, 0, 0, 0};
     int option = '\0';
+    char line[400];
 
     do
     {
@@ -111,18 +113,19 @@ void quadratic_solution(void)
 
         switch(equation.number_of_roots)
         {
-            case          IMAGINARY: PRINT_COLOR(BLUE, "Уравнение не имеет действительных решений\n");
+            case          IMAGINARY: print_no_real_roots();
                             break;
-            case       NO_SOLUTIONS: PRINT_COLOR(BLUE, "Уравнение не имеет никаких решений\n");
+            case       NO_SOLUTIONS: print_no_roots();
                             break;
-            case       ONE_SOLUTION: PRINT_COLOR(BLUE, "Уравнение %gx^2%+gx%+g имеет единственный"
-                            " корень\n", equation.a, equation.b, equation.c);
+            case       ONE_SOLUTION: sprintf(line, "x=%.3g", equation.x1);
+                                     nice_output(line);
                             break;
-            case      TWO_SOLUTIONS: PRINT_COLOR(BLUE, "Уравнение %gx^2%+gx%+g имеет два"
-                            " корня x = %g и x = %g\n", equation.a,
-                             equation.b, equation.c, equation.x1, equation.x2);
+            case      TWO_SOLUTIONS: sprintf(line, "x1=%.3g", equation.x1);
+                                     nice_output(line);
+                                     sprintf(line, "x2=%.3g", equation.x2);
+                                     nice_output(line);
                             break;
-            case INFINITY_SOLUTIONS: PRINT_COLOR(BLUE, "Бесконечное количество решений\n");
+            case INFINITY_SOLUTIONS: print_inf_roots();
                             break;
             default                : PRINT_COLOR(EXTRA_RED, "Ошибка\n");
                            return;
@@ -243,7 +246,10 @@ double get_num(double *pt, int mode, const char *for_compare)
  */
 int get_option(void)
 {
-    PRINT_COLOR(ORANGE, "Введите y, чтобы продолжить. n - в противном случае\n");
+    printf(RED);
+    print_continue_message();
+    printf(RESET_COLOR);
+
     int ch1 = getchar();
     while (ch1 != 'y' && ch1 != 'n')
     {
@@ -297,15 +303,15 @@ void coeffs_initialization(quadratic * ptr)
 {
     my_assert(ptr);
 
-    PRINT_COLOR(GREEN, "Введите a\n");
+    print_a();
     printf(">:");
     get_num(&ptr->a, 0, NULL);
 
-    PRINT_COLOR(GREEN, "Введите b\n");
+    print_b();
     printf(">:");
     get_num(&ptr->b, 0, NULL);
 
-    PRINT_COLOR(GREEN, "Введите c\n");
+    print_c();
     printf(">:");
     get_num(&ptr->c, 0, NULL);
 }
@@ -419,13 +425,16 @@ void big_test(void)
  @return                     ничего
  */
 
-void print_ascii(FILE *art_addres)
+void print_ascii(FILE *art_addres, int times)
 {
     char one_line[300];
     while(fgets(one_line, 300, art_addres))
     {
+        printf("\033[%dC", times);
         fputs(one_line, stdout);
     }
+
+    puts("\n");
 }
 
 /**
@@ -441,7 +450,7 @@ void print_rand_ascii(void)
 
     FILE *fp_art = NULL;
     my_assert(fp_art = fopen(ASCII_ARTS[rand() % (sizeof (ASCII_ARTS) / sizeof(ASCII_ARTS[0]))], "r"));
-    print_ascii(fp_art);
+    print_ascii(fp_art, 10);
     my_assert(!fclose(fp_art));
 }
 
@@ -456,62 +465,198 @@ void print_greeting(void)
 {
     FILE *fp_art = NULL;
     my_assert(fp_art = fopen("arts/greeting", "r"));
-    print_ascii(fp_art);
+    print_ascii(fp_art, 10);
     my_assert(!fclose(fp_art));
 }
 
 
 
-void nice_output(char symbol)
+void nice_output(char *output)
 {
     FILE *fp = NULL;
-
-    switch(symbol)
+    my_assert(output);
+    int i = 1;
+    while(*output)
     {
-        case 'x':   my_assert(fp = fopen("symbols/x", "r"));
-                    print_ascii(fp);
-            break;
-        case '-':   my_assert(fp = fopen("symbols/minus", "r"));
-                    print_ascii(fp);
-            break;
-        case '.':   my_assert(fp = fopen("symbols/dot", "r"));
-                    print_ascii(fp);
-            break;
-        case '9':   my_assert(fp = fopen("symbols/9", "r"));
-                    print_ascii(fp);
-            break;
-        case '8':   my_assert(fp = fopen("symbols/8", "r"));
-                    print_ascii(fp);
-            break;
-        case '7':   my_assert(fp = fopen("symbols/7", "r"));
-                    print_ascii(fp);
-            break;
-        case '6':   my_assert(fp = fopen("symbols/6", "r"));
-                    print_ascii(fp);
-            break;
-        case '5':   my_assert(fp = fopen("symbols/5", "r"));
-                    print_ascii(fp);
-            break;
-        case '4':   my_assert(fp = fopen("symbols/4", "r"));
-                    print_ascii(fp);
-            break;
-        case '3':   my_assert(fp = fopen("symbols/3", "r"));
-                    print_ascii(fp);
-            break;
-        case '2':   my_assert(fp = fopen("symbols/2", "r"));
-                    print_ascii(fp);
-            break;
-        case '1':   my_assert(fp = fopen("symbols/1", "r"));
-                    print_ascii(fp);
-            break;
-        case '0':   my_assert(fp = fopen("symbols/0", "r"));
-                    print_ascii(fp);
-            break;
-        case '=':   my_assert(fp = fopen("symbols/equal", "r"));
-                    print_ascii(fp);
-            break;
-        default :   my_assert(0);
-    }
 
+
+        switch(*output)
+        {
+            case 'x':   {
+                            my_assert(fp = fopen("symbols/x", "r"));
+                            print_ascii(fp, i * 9);
+                            printf("\033[8A");
+                            break;
+                        }
+
+            case '-':   {
+                            my_assert(fp = fopen("symbols/minus", "r"));
+                            print_ascii(fp, i * 9);
+                            printf("\033[8A");
+                            break;
+                        }
+
+            case '.':   {
+                            my_assert(fp = fopen("symbols/dot", "r"));
+                            print_ascii(fp, i * 9);
+                            printf("\033[8A");
+                            break;
+                        };
+
+            case '9':   {
+                            my_assert(fp = fopen("symbols/9", "r"));
+                            print_ascii(fp, i * 9);
+                            printf("\033[8A");
+                            break;
+                        }
+
+            case '8':   {
+                            my_assert(fp = fopen("symbols/8", "r"));
+                            print_ascii(fp, i * 9);
+                            printf("\033[8A");
+                            break;
+                        }
+
+            case '7':   {
+                            my_assert(fp = fopen("symbols/7", "r"));
+                            print_ascii(fp, i * 9);
+                            printf("\033[8A");
+                            break;
+                        }
+
+            case '6':   {
+                            my_assert(fp = fopen("symbols/6", "r"));
+                            print_ascii(fp, i * 9);
+                            printf("\033[8A");
+                            break;
+                        }
+
+            case '5':   {
+                            my_assert(fp = fopen("symbols/5", "r"));
+                            print_ascii(fp, i * 9);
+                            printf("\033[8A");
+                            break;
+                        }
+
+            case '4':   {
+                            my_assert(fp = fopen("symbols/4", "r"));
+                            print_ascii(fp, i * 9);
+                            printf("\033[8A");
+                            break;
+                        }
+
+            case '3':   {
+                            my_assert(fp = fopen("symbols/3", "r"));
+                            print_ascii(fp, i * 9);
+                            printf("\033[8A");
+                            break;
+                        }
+
+            case '2':   {
+                            my_assert(fp = fopen("symbols/2", "r"));
+                            print_ascii(fp, i * 9);
+                            printf("\033[8A");
+                            break;
+                        }
+
+            case '1':   {
+                            my_assert(fp = fopen("symbols/1", "r"));
+                            print_ascii(fp, i * 9);
+                            printf("\033[8A");
+                            break;
+                        }
+
+            case '0':   {
+                            my_assert(fp = fopen("symbols/0", "r"));
+                            print_ascii(fp, i * 9);
+                            printf("\033[8A");
+                            break;
+                        }
+
+            case '=':   {
+                            my_assert(fp = fopen("symbols/equal", "r"));
+                            print_ascii(fp, i * 9);
+                            printf("\033[8A");
+                            break;
+                        }
+
+            case 'e':   {
+                            my_assert(fp = fopen("symbols/e", "r"));
+                            print_ascii(fp, i * 9);
+                            printf("\033[8A");
+                            break;
+                        }
+
+            default :   my_assert(0);
+        }
+        i++;
+        output++;
+    }
+    puts("\n\n\n\n\n\n\n\n");
     my_assert(!fclose(fp));
+}
+
+
+void print_goodbye(void)
+{
+    FILE *fp_art = NULL;
+    my_assert(fp_art = fopen("arts/goodbye", "r"));
+    print_ascii(fp_art, 10);
+    my_assert(!fclose(fp_art));
+}
+
+void print_inf_roots(void)
+{
+    FILE *fp_art = NULL;
+    my_assert(fp_art = fopen("arts/inf_roots", "r"));
+    print_ascii(fp_art, 10);
+    my_assert(!fclose(fp_art));
+}
+
+void print_no_roots(void)
+{
+    FILE *fp_art = NULL;
+    my_assert(fp_art = fopen("arts/no_roots", "r"));
+    print_ascii(fp_art, 10);
+    my_assert(!fclose(fp_art));
+}
+
+void print_no_real_roots(void)
+{
+    FILE *fp_art = NULL;
+    my_assert(fp_art = fopen("arts/no_real_roots", "r"));
+    print_ascii(fp_art, 10);
+    my_assert(!fclose(fp_art));
+}
+
+void print_a(void)
+{
+    FILE *fp_art = NULL;
+    my_assert(fp_art = fopen("arts/print_a", "r"));
+    print_ascii(fp_art, 10);
+    my_assert(!fclose(fp_art));
+}
+
+void print_b(void)
+{
+    FILE *fp_art = NULL;
+    my_assert(fp_art = fopen("arts/print_b", "r"));
+    print_ascii(fp_art, 10);
+    my_assert(!fclose(fp_art));
+}
+
+void print_c(void)
+{
+    FILE *fp_art = NULL;
+    my_assert(fp_art = fopen("arts/print_c", "r"));
+    print_ascii(fp_art, 10);
+    my_assert(!fclose(fp_art));
+}
+
+void print_continue_message(void)
+{
+    FILE *fp_art = NULL;
+    my_assert(fp_art = fopen("arts/print_continue_message", "r"));
+    print_ascii(fp_art, 10);
+    my_assert(!fclose(fp_art));
 }

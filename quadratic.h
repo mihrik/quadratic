@@ -77,9 +77,17 @@ void test_quadratic(void);
 void test_get_num(void);
 void big_test(void);
 int run_get_num_test(int not_error, int test_num, FILE *fp_strings, FILE *fp_data);
-void print_ascii(FILE *art_addres);
+void print_ascii(FILE *art_addres, int times);
 void print_rand_ascii(void);
 void print_greeting(void);
-void nice_output(char symbol);
-
+void nice_output(char *output);
+void beautiful_print(const char *line);
+void print_goodbye(void);
+void print_inf_roots(void);
+void print_no_roots(void);
+void print_no_real_roots(void);
+void print_a(void);
+void print_b(void);
+void print_c(void);
+void print_continue_message(void);
 // todo скрипты .sh .bush

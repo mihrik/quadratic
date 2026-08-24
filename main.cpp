@@ -10,12 +10,13 @@
 int main(int argc, char *argv[])
 {
     print_rand_ascii();
-    puts("\n\n");
     print_greeting();
+
 
     char primary_str[] = "";
     char *color_mode = primary_str;
     char *test_mode = primary_str;
+
 
     switch(argc)
     {
@@ -43,6 +44,6 @@ int main(int argc, char *argv[])
 
     quadratic_solution();
 
-    PRINT_COLOR(GREEN, "Завершение программы\n");
+    print_goodbye();
     return 0;
 }
