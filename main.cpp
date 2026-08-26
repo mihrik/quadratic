@@ -47,3 +47,7 @@ int main(int argc, char *argv[])
     print_goodbye();
     return 0;
 }
+
+// todo sleep
+// todo graphic
+// polynomial solution

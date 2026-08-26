@@ -23,7 +23,8 @@
 const double EPS = 1e-9;
 const int INPUT_BUFFER_SIZE = 100;
 const int MAX_PHRASE_SIZE = 200;
-static const char *ASCII_ARTS[] = {"arts/shrek", "arts/mole", "arts/some_bird", "arts/squid", "arts/sponge_bob", "arts/teddy", "arts/old_car", "arts/vamp"};
+
+const char* const ASCII_ARTS[] = {"arts/shrek", "arts/mole", "arts/some_bird", "arts/squid", "arts/sponge_bob", "arts/teddy", "arts/old_car", "arts/vamp"};
 
 typedef struct quadratic
 {
@@ -46,8 +47,8 @@ enum root_cases
 
 enum modes
 {
-    off = 0,
-    on = 1
+    classic = 0,
+    test = 1
 };
 
 enum arg_values
@@ -67,7 +68,7 @@ int is_zero(double num);
 void coeffs_initialization(quadratic * ptr);
 void clear_buffer(void);
 int check_clear_buf(char *buffer);
-int run_one_test(quadratic *ref, int test_num);
+int run_one_test(quadratic *ref, int test_num, char const name_of_file[]);
 int meanings_are_equal(double x1, double x2);
 void sort_roots(double *x1, double *x2);
 int run_tests(void);
@@ -90,4 +91,7 @@ void print_a(void);
 void print_b(void);
 void print_c(void);
 void print_continue_message(void);
+void print_phrase(const char* const file_name);
+int read_file_coeffs(quadratic **quadratic_equation);
+void graphic(double a, double b, double c);
 // todo скрипты .sh .bush
