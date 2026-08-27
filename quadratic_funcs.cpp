@@ -99,37 +99,12 @@ int root_count_and_solution(quadratic *object)
 
 void quadratic_solution(void)
 {
-    quadratic equation = {0, 0, 0, 0, 0, 0};
     int option = '\0';
-    char line[400]; //
+    char line[LEN_OF_ANSWER] = {};
 
     do
     {
-        coeffs_initialization(&equation);
-
-        equation.number_of_roots = root_count_and_solution(&equation);
-
-        graphic(equation.a, equation.b, equation.c);
-
-        switch(equation.number_of_roots)
-        {
-            case          IMAGINARY: print_no_real_roots();
-                            break;
-            case       NO_SOLUTIONS: print_no_roots();
-                            break;
-            case       ONE_SOLUTION: sprintf(line, "x=%.3g", equation.x1);
-                                     nice_output(line);
-                            break;
-            case      TWO_SOLUTIONS: sprintf(line, "x1=%.3g", equation.x1);
-                                     nice_output(line);
-                                     sprintf(line, "x2=%.3g", equation.x2);
-                                     nice_output(line);
-                            break;
-            case INFINITY_SOLUTIONS: print_inf_roots();
-                            break;
-            default                : PRINT_COLOR(EXTRA_RED, "Ошибка\n");
-                           return;
-        }
+        show_solution(line);
 
         option = get_option();
         while (getchar() != '\n'); //function
@@ -229,4 +204,55 @@ void big_test(void)
 {
     test_quadratic();
     test_get_num();
+}
+
+/**
+ @brief              выводит визуальную составляющую решения уравнения
+
+ @param [out] line   строка содержащая решение уравнения в строковом формате
+ @return             ничего
+ */
+
+void show_solution(char *line)
+{
+    quadratic equation = {.a = 0, .b = 0, .c = 0, .x1 = 0, .x2 = 0, .number_of_roots = 0};
+
+    coeffs_initialization(&equation);
+
+    equation.number_of_roots = root_count_and_solution(&equation);
+
+    graphic(equation.a, equation.b, equation.c);
+
+    output(&equation, &line);
+}
+
+/**
+ @brief                  выводит корни уравнения через ascii art
+
+ @param [out]  solution  указатель на структуру квадратного уравнения
+ @param [out]  console   указатель на строку содержащую решение в строковом формате
+ @return                 ничего
+ */
+
+void output(quadratic *solution, char **console)
+{
+    switch(solution->number_of_roots)
+    {
+        case          IMAGINARY: print_no_real_roots();
+                        break;
+        case       NO_SOLUTIONS: print_no_roots();
+                        break;
+        case       ONE_SOLUTION: sprintf(*console, "x=%.3g", solution->x1);
+                                 nice_output(*console);
+                        break;
+        case      TWO_SOLUTIONS: sprintf(*console, "x1=%.3g", solution->x1);
+                                 nice_output(*console);
+                                 sprintf(*console, "x2=%.3g", solution->x2);
+                                 nice_output(*console);
+                        break;
+        case INFINITY_SOLUTIONS: print_inf_roots();
+                        break;
+        default                : PRINT_COLOR(EXTRA_RED, "Ошибка\n");
+                        return;
+        }
 }

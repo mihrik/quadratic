@@ -168,7 +168,7 @@ void clear_buffer(void)
 {
     while (getchar() != '\n');
 }
-// todo files
+
 /**
  @brief                 проверяет является ли строка пробелами
 

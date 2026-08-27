@@ -18,9 +18,9 @@ int run_get_num_tests(void)
     FILE *fp_data = NULL, *fp_strings = NULL;
     my_assert(fp_data = fopen(GET_NUM_DATA_FILE, "r"));
     my_assert(fp_strings = fopen(GET_NUM_STRINGS_FILE, "r"));
+
     int test_num = 0;
     int not_error = 0;
-
     int sum_of_fails = 0;
 
     while (fscanf(fp_data, "%d %d", &test_num, &not_error) == 2)

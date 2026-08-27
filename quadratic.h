@@ -20,13 +20,16 @@
         exit(EXIT_FAILURE); \
     }
 
-const double EPS = 1e-9;
-const int INPUT_BUFFER_SIZE = 100;
-const int MAX_PHRASE_SIZE = 200;
+const double EPS = 1e-9; // погрешность сравнения чисел double
+const int INPUT_BUFFER_SIZE = 100; // макс длина массива для пользовательского ввода
+const int MAX_PHRASE_SIZE = 200; // макс длина массива для ввода с файла
+const int LEN_OF_ANSWER = 400; // макс длина массива для хранения ответа
+const int SIZE = 77; // нечетное число, задает размер выводимого графика
 
 const char* const ASCII_ARTS[] = {"arts/shrek", "arts/mole", "arts/some_bird", "arts/squid", "arts/sponge_bob", "arts/teddy", "arts/old_car", "arts/vamp"};
+// массив названий файлов ascii art используемых в программе
 
-typedef struct quadratic
+typedef struct quadratic // инфо о квадратном уравнении
 {
     double a; // коэфф. перед x^2
     double b; // коэфф. перед x
@@ -36,7 +39,7 @@ typedef struct quadratic
     int number_of_roots; // число корней этого уравнения
 } quadratic;
 
-enum root_cases
+enum root_cases // вариации решений квадратного уравнения
 {
     IMAGINARY = -1,
     NO_SOLUTIONS,
@@ -45,13 +48,13 @@ enum root_cases
     INFINITY_SOLUTIONS
 };
 
-enum modes
+enum modes // для функции get_num
 {
     classic = 0,
     test = 1
 };
 
-enum arg_values
+enum arg_values // для анализа количества аргументов командной строки
 {
     ONE_VALUE = 1,
     TWO_VALUES,
@@ -94,4 +97,8 @@ void print_continue_message(void);
 void print_phrase(const char* const file_name);
 int read_file_coeffs(quadratic **quadratic_equation);
 void graphic(double a, double b, double c);
+int amount_of_tests(void);
+void show_solution(char *line);
+void output(quadratic *solution, char **console);
+
 // todo скрипты .sh .bush

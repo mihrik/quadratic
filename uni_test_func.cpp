@@ -141,7 +141,10 @@ int read_file_coeffs(quadratic **quadratic_equation)
 {
     FILE *fp = NULL;
     my_assert(fp = fopen(QUADRATIC_TEST_FILE, "r"));
-    quadratic *quadratic_equations = (quadratic *) calloc(1, sizeof(quadratic));
+
+    quadratic *quadratic_equations = (quadratic *) calloc((unsigned int)amount_of_tests(), sizeof(quadratic));
+    my_assert(quadratic_equation)
+
     unsigned int i = 0;
 
     while(fscanf(fp, "%lf %lf %lf %d", &quadratic_equations[i].a, &quadratic_equations[i].b,
@@ -165,10 +168,27 @@ int read_file_coeffs(quadratic **quadratic_equation)
 
         }
         i++;
-        quadratic_equations = (quadratic *)realloc(quadratic_equations, (i + 1) * sizeof(quadratic));
+
     }
 
     *quadratic_equation = quadratic_equations;
+    my_assert(!fclose(fp));
+    return (int)i;
+}
+
+int amount_of_tests(void)
+{
+    FILE *fp = NULL;
+    my_assert(fp = fopen(QUADRATIC_TEST_FILE, "r"));
+
+    unsigned int i = 1;
+    char ch = '\0';
+    while ((ch = (char)getc(fp)) != EOF)
+    {
+        if (ch == '\n')
+            i++;
+    }
+
     my_assert(!fclose(fp));
     return (int)i;
 }

@@ -1,7 +1,17 @@
 #include <stdio.h>
 #include "quadratic.h"
 #include <math.h>
-#define SIZE 55 // even num
+
+/**
+ @brief                  выводит график заданной функции
+
+ @param [in]  a          коэффициент а
+ @param [in]  b          коэффициент b
+ @param [in]  c          коэффициент с
+
+ @return                 количество непройденных тестов
+ @note                   берет данные из файла "quadratic_references"
+ */
 
 void graphic(double a, double b, double c)
 {
@@ -27,10 +37,10 @@ void graphic(double a, double b, double c)
     double y_l = 1600 * a - 40 * b + c;
     double y_r = 1600 * a + 40 * b + c;
 
-    double y_scale = (SIZE / 2.0) / fmax(fabs(y_l), fabs(y_r));
+    double y_scale = (double)SIZE * 2 / fmax(fabs(y_l), fabs(y_r));
     for (int column = 0; column < SIZE; column++)
     {
-        double x = (double)(column - SIZE / 2);
+        double x = (column - (double)SIZE / 2);
 
         double y = a * x * x + b * x + c;
         y *= y_scale;
@@ -38,7 +48,7 @@ void graphic(double a, double b, double c)
         int row = SIZE / 2 - (int)y;
 
         if (row >= 0 && row < SIZE)
-        graph[row][column] = '*';
+            graph[row][column] = '*';
     }
 
 

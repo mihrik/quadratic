@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
         default          : puts("Превышено максимальное количество аргументов командной строки"
                             ". Их максимальное количество = 3");
             break;
-    }
+    } // TODO to function
 
     if (strcmp(test_mode, "on") == 0)
     {
@@ -49,5 +49,4 @@ int main(int argc, char *argv[])
 }
 
 // todo sleep
-// todo graphic
-// polynomial solution
+
