@@ -120,16 +120,36 @@ int get_option(void)
     print_continue_message();
     printf(RESET_COLOR);
 
-    int ch1 = getchar();
-    while (ch1 != 'y' && ch1 != 'n')
-    {
-        PRINT_COLOR(RED, "Недопустимый ввод, введите y или n\n");
-        clear_buffer();
+    char phrase[MAX_PHRASE_SIZE] = {};
+    bool read_successfully = false;
+    int ch = '\0';
 
-        ch1 = getchar();
+    while (!read_successfully)
+    {
+        my_assert(fgets(phrase, MAX_PHRASE_SIZE, stdin));
+
+        if (phrase[0] != 'y' && phrase[0] != 'n')
+        {
+            phrase[strlen(phrase) - 1] = '\0';
+            PRINT_COLOR(RED, "%s не является допустимым вводом, введите y или n\n", phrase);
+        }
+        else
+        {
+            if (phrase[1] == '\n' || check_clear_buf(phrase + 1))
+            {
+                ch = phrase[0];
+                read_successfully = true;
+            }
+            else
+            {
+                phrase[strlen(phrase) - 1] = '\0';
+                PRINT_COLOR(RED, "%s не является допустимым вводом, введите y или n\n", phrase);
+            }
+        }
+
     }
 
-    return ch1;
+    return ch;
 }
 
 /**

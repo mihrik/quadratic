@@ -16,8 +16,10 @@
 void print_ascii(FILE *art_addres, int times)
 {
     char one_line[300];
+    struct timespec time = {.tv_sec = 0, .tv_nsec = 50000000};
     while(fgets(one_line, 300, art_addres))
     {
+        nanosleep(&time, NULL);
         printf("\033[%dC", times);
         fputs(one_line, stdout);
     }

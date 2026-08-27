@@ -17,20 +17,7 @@ int main(int argc, char *argv[])
     char *color_mode = primary_str;
     char *test_mode = primary_str;
 
-
-    switch(argc)
-    {
-        case ONE_VALUE   :
-            break;
-        case TWO_VALUES  : color_mode = argv[1];
-            break;
-        case THREE_VALUES: color_mode = argv[1];
-                           test_mode = argv[2];
-            break;
-        default          : puts("Превышено максимальное количество аргументов командной строки"
-                            ". Их максимальное количество = 3");
-            break;
-    } // TODO to function
+    arg_analysis(&color_mode, &test_mode, argv, argc);
 
     if (strcmp(test_mode, "on") == 0)
     {

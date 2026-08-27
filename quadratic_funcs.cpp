@@ -3,7 +3,8 @@
 #include <math.h>
 #include <stdlib.h>
 #include <stdbool.h>
-
+#include <time.h>
+#include <unistd.h>
 
 /**
  @brief             вычисляет дискриминант
@@ -107,7 +108,7 @@ void quadratic_solution(void)
         show_solution(line);
 
         option = get_option();
-        while (getchar() != '\n'); //function
+
     } while (option != 'n');
 }
 
@@ -255,4 +256,32 @@ void output(quadratic *solution, char **console)
         default                : PRINT_COLOR(EXTRA_RED, "Ошибка\n");
                         return;
         }
+}
+
+/**
+ @brief                    присваивает переменным color_mode и test_mode значения из командной строки
+
+ @param [out]  color_mode  указатель на строку с режимом цветового вывода
+ @param [out]  test_mode   указатель на строку с режимом вывода тестов
+ @param [in]   argv        аргументы командной строки
+ @param [in]   argc        количество документов командной строки
+ @return                   ничего
+ */
+
+void arg_analysis(char **color_mode, char **test_mode, char *argv[], int argc)
+{
+    switch(argc)
+    {
+        case ONE_VALUE   :
+            break;
+        case TWO_VALUES  : *color_mode = argv[1];
+            break;
+        case THREE_VALUES: *color_mode = argv[1];
+                           *test_mode = argv[2];
+            break;
+        default          : puts("Превышено максимальное количество аргументов командной строки"
+                            ". Их максимальное количество = 3");
+                            my_assert(0);
+            break;
+    }
 }

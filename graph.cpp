@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "quadratic.h"
 #include <math.h>
+#include <time.h>
 
 /**
  @brief                  выводит график заданной функции
@@ -15,6 +16,8 @@
 
 void graphic(double a, double b, double c)
 {
+    struct timespec time = {.tv_sec = 0, .tv_nsec = 500000};
+
     char graph[SIZE][SIZE] = {};
 
     for (int i = 0; i < SIZE; i++)
@@ -58,10 +61,12 @@ void graphic(double a, double b, double c)
         {
             if (graph[i][j] != '|' && graph[i][j] != '_' && graph[i][j] != '*' && graph[i][j] != '\\' && graph[i][j] != '/' && graph[i][j] != 'x' && graph[i][j] != 'y')
             {
+                nanosleep(&time, NULL);
                 printf("%c", ' ');
             }
             else
             {
+                nanosleep(&time, NULL);
                 printf("%c", graph[i][j]);
             }
         }

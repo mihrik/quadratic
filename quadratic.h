@@ -16,7 +16,7 @@
 #define my_assert(x) \
     if (!(x)) \
     { \
-        fprintf(stderr, "Не проходит проверку. Ошибка в %s:%d\n", __FILE__, __LINE__); \
+        fprintf(stderr, "Не проходит проверку. Ошибка в %s:%d в условии: %s\n", __FILE__, __LINE__, #x); \
         exit(EXIT_FAILURE); \
     }
 
@@ -100,5 +100,5 @@ void graphic(double a, double b, double c);
 int amount_of_tests(void);
 void show_solution(char *line);
 void output(quadratic *solution, char **console);
-
+void arg_analysis(char **color_mode, char **test_mode, char *argv[], int argc);
 // todo скрипты .sh .bush
