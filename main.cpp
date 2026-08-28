@@ -15,20 +15,14 @@ int main(int argc, char *argv[])
     print_greeting();
 
 
-    char primary_str[] = "";
-    char *color_mode = primary_str;
+    char primary_str[8] = "";
     char *test_mode = primary_str;
 
-    arg_analysis(&color_mode, &test_mode, argv, argc);
+    arg_analysis(&test_mode, argv, argc);
 
     if (strcmp(test_mode, "on") == 0)
     {
         big_test();
-    }
-
-    if (strcmp(color_mode, "-c") == 0)
-    {
-        ;
     }
 
     quadratic_solution();

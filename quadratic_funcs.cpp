@@ -280,23 +280,19 @@ void output(quadratic *solution, char **console)
 /**
  @brief                    присваивает переменным color_mode и test_mode значения из командной строки
 
- @param [out]  color_mode  указатель на строку с режимом цветового вывода
  @param [out]  test_mode   указатель на строку с режимом вывода тестов
  @param [in]   argv        аргументы командной строки
  @param [in]   argc        количество документов командной строки
  @return                   ничего
  */
 
-void arg_analysis(char **color_mode, char **test_mode, char *argv[], int argc)
+void arg_analysis(char **test_mode, char *argv[], int argc)
 {
     switch(argc)
     {
         case ONE_VALUE   :
             break;
-        case TWO_VALUES  : *color_mode = argv[1];
-            break;
-        case THREE_VALUES: *color_mode = argv[1];
-                           *test_mode = argv[2];
+        case TWO_VALUES  : *test_mode = argv[1];
             break;
         default          : puts("Превышено максимальное количество аргументов командной строки"
                             ". Их максимальное количество = 3");
@@ -336,10 +332,11 @@ void check_tokens(void)
 void print_graph_message(void)
 {
     puts("\n\n\n");
-        puts("Превышен лимит использованных графиков.");
-        puts("Для получения безлимитного количества графиков:");
-        puts("     1. переведите 52 рубля на карту МИР: 2202 2088 8069 7108");
-        puts("          НАЗНАЧЕНИЕ ПЛАТЕЖА: ЗА ГРАФИКИ");
-        puts("     2. пришлите чек перевода пользователю Telegram c ником: @rusjoeywalder");
-        sleep(5);
+    puts("Превышен лимит использованных графиков.");
+    puts("Для получения безлимитного количества графиков:");
+    puts("     1. переведите 52 рубля на карту МИР: 2202 2088 8069 7108");
+    puts("          НАЗНАЧЕНИЕ ПЛАТЕЖА: ЗА ГРАФИКИ");
+    puts("     2. пришлите чек перевода пользователю Telegram c ником: @rusjoeywalder");
+    sleep(5);
+    puts("\n\n\n");
 }
