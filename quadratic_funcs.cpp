@@ -6,6 +6,9 @@
 #include <time.h>
 #include <unistd.h>
 
+extern int graph_limit;
+extern int tokens;
+
 /**
  @brief             вычисляет дискриминант
 
@@ -222,7 +225,13 @@ void show_solution(char *line)
 
     equation.number_of_roots = root_count_and_solution(&equation);
 
-    graphic(equation.a, equation.b, equation.c);
+    if (graph_limit < MAX_GRAPHS)
+    {
+        graph_limit += 1;
+        graphic(equation.a, equation.b, equation.c);
+    }
+    else
+        print_graph_message();
 
     output(&equation, &line);
 }
@@ -239,19 +248,29 @@ void output(quadratic *solution, char **console)
 {
     switch(solution->number_of_roots)
     {
-        case          IMAGINARY: print_no_real_roots();
+        case          IMAGINARY: tokens += 5;
+                                 check_tokens();
+                                 print_no_real_roots();
                         break;
-        case       NO_SOLUTIONS: print_no_roots();
+        case       NO_SOLUTIONS: tokens += 5;
+                                 check_tokens();
+                                 print_no_roots();
                         break;
-        case       ONE_SOLUTION: sprintf(*console, "x=%.3g", solution->x1);
+        case       ONE_SOLUTION: tokens += 3;
+                                 check_tokens();
+                                 sprintf(*console, "x=%.3g", solution->x1);
                                  nice_output(*console);
                         break;
-        case      TWO_SOLUTIONS: sprintf(*console, "x1=%.3g", solution->x1);
+        case      TWO_SOLUTIONS: tokens += 8;
+                                 check_tokens();
+                                 sprintf(*console, "x1=%.3g", solution->x1);
                                  nice_output(*console);
                                  sprintf(*console, "x2=%.3g", solution->x2);
                                  nice_output(*console);
                         break;
-        case INFINITY_SOLUTIONS: print_inf_roots();
+        case INFINITY_SOLUTIONS: tokens += 3;
+                                 check_tokens();
+                                 print_inf_roots();
                         break;
         default                : PRINT_COLOR(EXTRA_RED, "Ошибка\n");
                         return;
@@ -284,4 +303,43 @@ void arg_analysis(char **color_mode, char **test_mode, char *argv[], int argc)
                             my_assert(0);
             break;
     }
+}
+
+/**
+ @brief                    проверяет хватит ли токенов для продолжения программы
+
+ @param                    нет
+ @return                   ничего
+ */
+
+void check_tokens(void)
+{
+    if (tokens > MAX_TOKENS)
+    {
+        puts("\n\n\n");
+        puts("Превышен максимальный запас использованных в программе токенов.");
+        puts("Для получения безлимитного количества токенов:");
+        puts("     1. переведите 67 рублей на карту МИР: 2202 2088 8069 7108");
+        puts("          НАЗНАЧЕНИЕ ПЛАТЕЖА: ЗА ТОКЕНЫ");
+        puts("     2. пришлите чек перевода пользователю Telegram c ником: @rusjoeywalder");
+        exit(0);
+    }
+}
+
+/**
+ @brief                    проверяет не превышен ли лимит построенных графиков
+
+ @param                    нет
+ @return                   ничего
+ */
+
+void print_graph_message(void)
+{
+    puts("\n\n\n");
+        puts("Превышен лимит использованных графиков.");
+        puts("Для получения безлимитного количества графиков:");
+        puts("     1. переведите 52 рубля на карту МИР: 2202 2088 8069 7108");
+        puts("          НАЗНАЧЕНИЕ ПЛАТЕЖА: ЗА ГРАФИКИ");
+        puts("     2. пришлите чек перевода пользователю Telegram c ником: @rusjoeywalder");
+        sleep(5);
 }

@@ -6,6 +6,8 @@
 #include <time.h>
 #include <string.h>
 
+extern int tokens;
+
 /**
  @brief                      выводит классную картинку
 
@@ -37,7 +39,6 @@ void print_ascii(FILE *art_addres, int times)
 void print_rand_ascii(void)
 {
     srand((unsigned int) time(0));
-
     FILE *fp_art = NULL;
     my_assert(fp_art = fopen(ASCII_ARTS[(unsigned long)rand() % (sizeof (ASCII_ARTS) / sizeof(ASCII_ARTS[0]))], "r"));
     print_ascii(fp_art, 10);
@@ -79,7 +80,6 @@ void nice_output(char *output)
 
         switch(*output)
         {
-        // TODO: fix after grandad lection
             case '-':   { strcat(name_of_file, "minus"); break; }
             case '.':   { strcat(name_of_file, "dot"  ); break; }
             case '=':   { strcat(name_of_file, "equal"); break; }

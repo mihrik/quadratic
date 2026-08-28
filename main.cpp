@@ -6,6 +6,8 @@
 #include <stdbool.h>
 #include <time.h>
 
+int tokens = 0;
+int graph_limit = 0;
 
 int main(int argc, char *argv[])
 {
@@ -34,6 +36,4 @@ int main(int argc, char *argv[])
     print_goodbye();
     return 0;
 }
-
-// todo sleep
-
+// TODO token usage

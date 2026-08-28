@@ -6,6 +6,8 @@
 #include <time.h>
 #include <string.h>
 
+extern int tokens;
+
 /**
  @brief                      получает число с клавиатуры
 
@@ -60,6 +62,7 @@ double get_num(double *pt, int mode, const char *for_compare)
             {
                 return 0;
             }
+            tokens += 3;
             PRINT_COLOR(RED, "недопустимый формат ввода\n");
             continue;
         }
@@ -91,6 +94,7 @@ double get_num(double *pt, int mode, const char *for_compare)
                 return 0;
             }
             buffer[i-1] = '\0';
+            tokens += 5;
             PRINT_COLOR(RED, "%s не является числовым вводом\n", buffer);
             continue;
         }
@@ -131,6 +135,7 @@ int get_option(void)
         if (phrase[0] != 'y' && phrase[0] != 'n')
         {
             phrase[strlen(phrase) - 1] = '\0';
+            tokens += 9;
             PRINT_COLOR(RED, "%s не является допустимым вводом, введите y или n\n", phrase);
         }
         else
@@ -142,6 +147,7 @@ int get_option(void)
             }
             else
             {
+                tokens += 9;
                 phrase[strlen(phrase) - 1] = '\0';
                 PRINT_COLOR(RED, "%s не является допустимым вводом, введите y или n\n", phrase);
             }

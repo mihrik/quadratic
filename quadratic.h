@@ -25,6 +25,8 @@ const int INPUT_BUFFER_SIZE = 100; // макс длина массива для 
 const int MAX_PHRASE_SIZE = 200; // макс длина массива для ввода с файла
 const int LEN_OF_ANSWER = 400; // макс длина массива для хранения ответа
 const int SIZE = 77; // нечетное число, задает размер выводимого графика
+const int MAX_TOKENS = 10000; // максимальное количество токенов для программы
+const int MAX_GRAPHS = 10000; // максимальное количество выведенных графиков за программу
 
 const char* const ASCII_ARTS[] = {"arts/shrek", "arts/mole", "arts/some_bird", "arts/squid", "arts/sponge_bob", "arts/teddy", "arts/old_car", "arts/vamp"};
 // массив названий файлов ascii art используемых в программе
@@ -101,4 +103,5 @@ int amount_of_tests(void);
 void show_solution(char *line);
 void output(quadratic *solution, char **console);
 void arg_analysis(char **color_mode, char **test_mode, char *argv[], int argc);
-// todo скрипты .sh .bush
+void check_tokens(void);
+void print_graph_message(void);
