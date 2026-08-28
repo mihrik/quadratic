@@ -1,4 +1,4 @@
-//#define COLOR
+#define COLOR
 #include <stdio.h>
 #ifdef COLOR
     #include "colors.h"
